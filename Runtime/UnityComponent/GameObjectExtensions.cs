@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MFramework.Extensions.UnityComponent
 {
-    public static class GameObjectExpansions
+    public static class GameObjectExtensions
     {
         /// <summary>
         /// Returns the full hierarchy name of the gameObject.

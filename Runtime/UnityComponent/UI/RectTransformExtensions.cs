@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace MFramework.Extensions.UnityComponent
 {
-    public static class RectTransformExpansions
+    public static class RectTransformExtensions
     {
         public static void SetAnchor(this RectTransform source, AnchorPresets anchorPreset, int offsetX = 0,
             int offsetY = 0) {

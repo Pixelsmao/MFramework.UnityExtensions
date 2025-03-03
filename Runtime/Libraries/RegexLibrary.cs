@@ -1,18 +1,27 @@
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace MFramework.Libraries
 {
     public static class RegexLibrary
     {
+
+        public const string AlphabetNumeric = "[a-zA-Z0-9]+";
+
         /// <summary>
         /// 匹配任意字符
         /// </summary>
-        public const string Any = ".";
+        public const string ContainAny = @"[\s\S]";
 
         /// <summary>
         /// 匹配除换行符以外的任意字符
         /// </summary>
-        public const string AnyWithoutLineFeed = @".*";
+        public const string AnyWithoutLineFeed = @".";
+
+        /// <summary>
+        /// 匹配零个或多个除换行符以外的任意字符
+        /// </summary>
+        public const string AnyWithoutMultiLineFeed = @".";
 
         /// <summary>
         /// 匹配任意空白字符
@@ -45,61 +54,59 @@ namespace MFramework.Libraries
         public const string AnyNonNumeric = @"\D";
 
         /// <summary>
-        /// 匹配任意字母数字
+        /// 匹配任意字母数字字符及下划线
         /// </summary>
         public const string AnyAlphabetNumeric = @"\w";
 
         /// <summary>
-        /// 匹配任意非字母数字
+        /// 匹配任何非字母数字字符及非下划线字符。
         /// </summary>
         public const string AnyNonAlphabetNumeric = @"\W";
 
         /// <summary>
-        /// 仅字母字符
+        /// 匹配由一个或多个大小写字母组成的字符串。
         /// </summary>
         public const string OnlyAlphabet = @"^[A-Za-z]+$";
 
         /// <summary>
-        /// 任意字母字符
+        /// 匹配任何字母字符
         /// </summary>
         public const string AnyAlphabet = @"[A-Za-z]";
 
         /// <summary>
-        /// 任意大写字母
+        /// 匹配任意大写字母
         /// </summary>
         public const string AnyUpperAlphabet = @"[A-Z]";
 
         /// <summary>
-        /// 任意小写字母
+        /// 匹配任意小写字母
         /// </summary>
         public const string AnyLowerAlphabet = @"[a-z]";
 
-
         /// <summary>
-        /// 任意字母和数字
+        /// 匹配由一个或多个字母和数字组成的字符串。
         /// </summary>
         public const string AnyAlphabetAndNumeric = @"^[A-Za-z0-9]+$";
-
-
+        
         /// <summary>
-        /// 任意英文字母、数字和下划线
+        /// 匹配由一个或多个字母、数字和下划线组成的字符串。
         /// </summary>
         public const string AnyAlphabetNumericAndUnderscore = @"^\w+$";
 
         /// <summary>
-        /// 全大写字母
+        /// 匹配由一个或多个大写字母组成的字符串。
         /// </summary>
         public const string AllUpperAlphabet = @"^[A-Z]+$";
 
         /// <summary>
-        /// 全小写字母
+        /// 匹配由一个或多个小写字母组成的字符串。
         /// </summary>
         public const string AllLowerAlphabet = @"^[a-z]+$";
 
         /// <summary>
         /// 十六进制字符(单个字符)
         /// </summary>
-        public const string HexadecimalCharacter = @"\b[0-9A-Fa-f]+\b";
+        public const string HexadecimalCharacter = @"[0-9A-Fa-f]";
 
         /// <summary>
         /// 十六进制字符串
@@ -107,182 +114,177 @@ namespace MFramework.Libraries
         public const string Hexadecimal = @"^[0-9A-Fa-f ]+$";
 
         /// <summary>
-        /// 用连字符连接的单词
+        /// 匹配用连字符连接的单词
         /// </summary>
         public const string HyphenatedWord = @"\b\w+-\w+\b";
 
-
         /// <summary>
-        /// 特定字符开始
+        /// 匹配特定字符开始的字符串
         /// </summary>
         public static string StartWith(string prefix) => $"^{Regex.Escape(prefix)}";
 
-
         /// <summary>
-        /// 空白字符开始
+        /// 匹配空白字符开始的字符串
         /// </summary>
         public const string StartWithBlank = @"^\s";
 
-
         /// <summary>
-        /// 任意字母开始
+        /// 匹配任意字母开始的字符串
         /// </summary>
         public const string StartWithAnyAlphabet = @"^[a-zA-Z]";
 
         /// <summary>
-        /// 特定字符结束
+        /// 匹配特定字符结束的字符串
         /// </summary>
         public static string EndWith(string suffix) => $"{Regex.Escape(suffix)}$";
 
         /// <summary>
-        /// 空白字符结束
+        /// 匹配以空白字符结束的字符串
         /// </summary>
         public const string EndWithBlank = @"\s$";
 
         /// <summary>
-        /// 任意字母结束
+        /// 匹配任意字母结束的字符串
         /// </summary>
         public const string EndWithAnyAlphabet = @"[a-zA-Z]$";
 
 
         /// <summary>
-        /// 特定字符开始和结束
+        /// 皮配特定字符开始和结束的字符串
         /// </summary>
         public static string StartEndWith(string prefix, string suffix) =>
             $"^{Regex.Escape(prefix)}.*?{Regex.Escape(suffix)}$";
 
-
         /// <summary>
-        /// 空白字符开始和结束
+        /// 匹配空白字符开始和结束的字符串
         /// </summary>
-        public const string StartEndWithBlank = @"^\s+|\s+$";
+        public const string StartEndWithBlank = @"^\s+.*\s+$";
 
         /// <summary>
-        /// 包含特定字符串
+        /// 匹配包含特定字符串的字符串
         /// </summary>
-        public static string Contain(string contain) => Regex.Escape(contain);
-
+        public static string Contain(string contain) => $".*{Regex.Escape(contain)}.*";
 
         /// <summary>
-        /// 包含多个空格
+        /// 匹配包含多个空格的字符串
         /// </summary>
-        public const string ContainAnyBlankCount = @"^\s+.*\s+$";
+        public const string ContainAnyBlank = @"\s{2,}";
 
         /// <summary>
-        /// 匹配整行
+        /// 匹配包含整行内容的字符串
         /// </summary>
         public const string CompleteRow = @"^.*$";
 
 
         /// <summary>
-        /// N位数字
+        /// 匹配包含N位数字的字符串
         /// </summary>
         public static string NNumeric(int count) => @"^\d{" + count + "}$";
 
 
         /// <summary>
-        /// 至少N位数字
+        /// 匹配至少有N位数字的字符串
         /// </summary>
         public static string AtLeastNNumbers(int minCount) => @"^\d{" + minCount + ",}$";
 
 
         /// <summary>
-        /// M-N位数字
+        /// 匹配至少有M位，最多有N位数字的字符串
         /// </summary>
         public static string AtLeastNNumbers(int minCount, int maxCount) => @"^\d{" + minCount + "," + maxCount + ",}$";
 
 
         /// <summary>
-        /// 整数
+        /// 匹配字符串是否为整数的
         /// </summary>
         public const string Integer = @"^-?\d+$";
 
         /// <summary>
-        /// 正整数
+        /// 匹配字符串是否为正整数
         /// </summary>
-        public const string PositiveInteger = @"[^[0-9]*[1-9][0-9]*$]";
+        public const string PositiveInteger = @"^[1-9]\d*$";
 
         /// <summary>
-        /// 负整数
+        /// 匹配字符串是否为负整数
         /// </summary>
         public const string NegativeInteger = @"^-[0-9]*[1-9][0-9]*$";
 
         /// <summary>
-        /// 非负整数(0+正整数)
+        /// 匹配字符串是否为非负整数(0+正整数)
         /// </summary>
-        public const string NonnegativeInteger = @"[^\d+$]";
-
-
-        /// <summary>
-        /// 非正整数
-        /// </summary>
-        public const string NonPositiveInteger = @"[^((-\d+)|(0+))$]";
+        public const string NonnegativeInteger = @"^(0|[1-9]\d*)$";
 
         /// <summary>
-        /// 浮点数
+        /// 匹配字符串是否为非正整数
         /// </summary>
-        public const string FloatingPointNumber = @"^(-?\d+)(\.\d+)?$";
+        public const string NonPositiveInteger = @"^(-\d+|0)$";
+
+        /// <summary>
+        /// 字符串是否为浮点数
+        /// </summary>
+        public const string FloatingPointNumber = @"^-?\d+(\.\d+)?$";
 
         /// <summary>
         /// 正浮点数
         /// </summary>
-        public const string PositiveFloatingPointNumber =
-            @"^(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*))$";
+        public const string PositiveFloatingPointNumber = @"^\d+(\.\d+)?$";
 
         /// <summary>
         /// 负浮点数
         /// </summary>
-        public const string NegativeFloatingPointNumber =
-            @"^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$";
+        public const string NegativeFloatingPointNumber = @"^-\d+(\.\d+)?$";
 
         /// <summary>
         /// 非负浮点数(0+正浮点数)
         /// </summary>
-        public const string NonNegativeFloatingPointNumber = @"[^\d+(\.\d+)?$]";
+        public const string NonNegativeFloatingPointNumber = @"^(0|\d+(\.\d+)?)$";
 
 
         /// <summary>
         /// 非正浮点数
         /// </summary>
-        public const string NonPositiveFloatingPointNumber = @"^((-\d+(\.\d+)?)|(0+(\.0+)?))$";
+        public const string NonPositiveFloatingPointNumber = @"^(-\d+(\.\d+)?)|(0(\.0+)?)$";
 
 
         /// <summary>
         /// 全角符号
         /// </summary>
-        public const string FullAngleSymbol = @"/[\uFF00-\uFFFF]/";
+        public const string FullAngleSymbol = @"[\uFF00-\uFFEF]";
 
         /// <summary>
-        /// 半角符号
+        /// 半角符号（常见符号）
         /// </summary>
-        public const string HalfAngleSymbol = @"/[\u0000-\u00FF]/";
+        public const string HalfAngleSymbol = @"[ -~]";
+
+        /// <summary>
+        /// 半角符号（所有半角字符）
+        /// </summary>
+        public const string HalfAngleAllSymbols = @"[\u0000-\u00FF]";
 
         /// <summary>
         /// 域名
         /// </summary>
-        public const string DomainName =
-            @"[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(/.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+/.?";
-
+        public const string DomainName = @"^(?:[a-zA-Z0-9](?:[-a-zA-Z0-9]{0,61}[a-zA-Z0-9])?\.)+(?:[a-zA-Z]{2,})$";
 
         /// <summary>
         /// Email地址
         /// </summary>
-        public const string EmailAddress = @"^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$";
+        public const string EmailAddress = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
 
         /// <summary>
         /// URL格式
         /// </summary>
-        public const string URL = @"(\w+(-\w+)*)(\.(\w+(-\w+)*))*(\?\S*)?$";
+        public const string URL = @"^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^ ]*)?$";
 
         /// <summary>
         /// URL主机部分
         /// </summary>
-        public const string HostURL = @"^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n]+)";
+        public const string HostURL = @"^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/\n]+)";
 
         /// <summary>
         /// 主机URL路径部分
         /// </summary>
-        public const string HostURLPath = @"(?:https?:\/\/)?(?:www\.)?[^\/]+(\/[^#?]+)";
+        public const string HostURLPath = @"^(?:https?:\/\/)?(?:www\.)?[^\/]+(\/[^#?]+)?";
 
         /// <summary>
         /// 双字节字符
@@ -292,12 +294,12 @@ namespace MFramework.Libraries
         /// <summary>
         /// 空行
         /// </summary>
-        public const string EmptyLine = @"\n[\s| ]*\r";
+        public const string EmptyLine = @"^\s*$";
 
         /// <summary>
         /// 日期格式
         /// </summary>
-        public const string DateFormat = @"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$";
+        public const string DateFormat = @"^(?:(?:19|20)\d\d)-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])$";
 
         /// <summary>
         /// 帐号是否合法(字母开头，允许5-16字节，允许字母数字下划线)
@@ -312,8 +314,7 @@ namespace MFramework.Libraries
         /// <summary>
         /// 强密码(必须包含大小写字母和数字的组合，不能使用特殊字符，长度在8-16之间)
         /// </summary>
-        public const string StrongPassword = @"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}$";
-
+        public const string StrongPassword = @"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9_]{8,16}$";
 
         /// <summary>
         /// 手机电话号码
@@ -325,7 +326,7 @@ namespace MFramework.Libraries
         /// <summary>
         /// 座机电话号码
         /// </summary>
-        public const string ChinaLandlinePhoneNumber = @"\d{3}-\d{8} |\d{4}-\d{7}";
+        public const string ChinaLandlinePhoneNumber = @"(\d{3}-\d{8})|(\d{4}-\d{7})";
 
         /// <summary>
         /// 腾讯QQ账号
@@ -336,12 +337,12 @@ namespace MFramework.Libraries
         /// <summary>
         /// 邮政编码
         /// </summary>
-        public const string PostalCode = @"[1-9]\d{5}(?!\d)";
+        public const string PostalCode = @"[1-9]\d{5}";
 
         /// <summary>
         /// 身份证号码
         /// </summary>
-        public const string ChinaIDCard = @"/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/";
+        public const string ChinaIDCard = @"^(?:\d{15}|\d{17}[\dXx])$";
 
         /// <summary>
         /// IPv4格式IP地址
@@ -353,13 +354,12 @@ namespace MFramework.Libraries
         /// <summary>
         /// 子网掩码
         /// </summary>
-        public const string SubnetMask =
-            @"((?:(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d)\\.){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d))";
+        public const string SubnetMask = @"^((25[0-5]|2[0-4]\d|[01]?\d?\d)\.){3}(25[0-5]|2[0-4]\d|[01]?\d?\d)$";
 
         /// <summary>
         /// HTML标记语言格式
         /// </summary>
-        public const string HtmlMarkingLanguage = @"/<(.*)>.*<\/\1>|<(.*) \/>/";
+        public const string HtmlMarkingLanguage = @"<([^>]+)>.*?</\1>|<([^>]+)\/?>";
 
         /// <summary>
         /// CJK统一表意字符
@@ -609,7 +609,7 @@ namespace MFramework.Libraries
         /// <summary>
         /// 英语音标(包括元音音标和辅音音标)
         /// </summary>
-        public static string EnglishPhoneticAlphabet = CombineRegex(EnglishVowelPhonetic, EnglishAuxiliaryPhonetic);
+        public static string EnglishPhoneticAlphabet => CombineRegex(EnglishVowelPhonetic, EnglishAuxiliaryPhonetic);
 
         /// <summary>
         /// 英语元音音标
@@ -624,7 +624,7 @@ namespace MFramework.Libraries
         /// <summary>
         /// 日语字符
         /// </summary>
-        public static string Japanese = CombineRegex(JapaneseHiragana, JapaneseKatakana, JapaneseKatakana);
+        public static string Japanese => CombineRegex(JapaneseHiragana, JapaneseKatakana, JapaneseKatakana);
 
         /// <summary>
         /// 日语平假名
@@ -696,24 +696,37 @@ namespace MFramework.Libraries
 
         #endregion
 
-        public const string WindowsPath = @"^[a-zA-Z]:\\[^\/:*?""<>|]+(\\[^\/:*?""<>|]+)*$";
 
-        private static string CombineRegex(string regex1, string regex2, string regex3 = "", string regex4 = "",
-            string regex5 = "", string regex6 = "", string regex7 = "", string regex8 = "")
+        /// <summary>
+        /// Windows文件路径（包括UNC路径）
+        /// </summary>
+        public const string WindowsPathWithUNC =
+            @"^(?:[a-zA-Z]:\\|(?:\\\\[^\\\/:*?""<>|\r\n]+\\[^\\\/:*?""<>|\r\n]+))(?:[^\\:*?""<>|\r\n]+\\)*(?:[^\\:*?""<>|\r\n]+)?$";
+
+        /// <summary>
+        /// Windows 目录路径
+        /// </summary>
+        public const string WindowsDirectoryPath = @"^[a-zA-Z]:\$?:[^\\:*?""<>|\r\n]+\$*(?:[^\\:*?""<>|\r\n]+\\?)?$";
+
+        private static string CombineRegex(params string[] regexes)
         {
-            return
-                $"[{ExtractRegex(regex1)}{ExtractRegex(regex2)}{ExtractRegex(regex3)}{ExtractRegex(regex4)}{ExtractRegex(regex5)}{ExtractRegex(regex6)}{ExtractRegex(regex7)}{ExtractRegex(regex8)}]";
+            // 使用 LINQ 来过滤掉空字符串，并提取有效的正则表达式部分
+            var combined = string.Concat(regexes
+                .Where(r => !string.IsNullOrEmpty(r)) // 过滤掉空字符串
+                .Select(ExtractRegex)); // 提取有效的正则表达式部分
+            return $"[{combined}]";
         }
 
         private static string ExtractRegex(string sourceRegex)
         {
-            if (sourceRegex == "") return string.Empty;
+            if (string.IsNullOrEmpty(sourceRegex)) return string.Empty;
+            // 如果正则表达式以 [ 开头并以 ] 结尾，则去掉方括号
             if (sourceRegex.StartsWith("[") && sourceRegex.EndsWith("]"))
             {
-                return sourceRegex.Substring(1, sourceRegex.Length - 2);
+                return sourceRegex[1..^1]; // 使用范围运算符来获取子字符串
             }
 
-            return string.Empty;
+            return sourceRegex;
         }
     }
 }

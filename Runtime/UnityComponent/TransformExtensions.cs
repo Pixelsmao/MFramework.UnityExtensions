@@ -5,7 +5,7 @@ using Object = UnityEngine.Object;
 
 namespace MFramework.Extensions.UnityComponent
 {
-    public static class TransformExpansions
+    public static class TransformExtensions
     {
         /// <summary>
         /// Returns the full hierarchy name of the transform.

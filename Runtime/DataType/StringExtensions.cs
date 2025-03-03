@@ -1,22 +1,27 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using MFramework.Libraries;
-using UnityEngine;
 
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace MFramework.Extensions.DataType
 {
-    public static class StringExpansions
+    public static class StringExtensions
     {
         #region Type Conversion
 
         /// <summary>
-        /// 字符型转换为整型：指定字符无法转换为整型时返回值为-1
+        /// 字符型转换为整型
         /// </summary>
-        public static int ToInt(this string self) => int.TryParse(self, out var int32) ? int32 : -1;
+        public static int ToInt(this string self) => int.Parse(self);
+
+        /// <summary>
+        /// 尝试字符型转换为整型：指定字符无法转换为整型时返回值为-1
+        /// </summary>
+        public static bool TryToInt(this string self, out int int32) => int.TryParse(self, out int32);
 
         /// <summary>
         /// 将字符转换为UTF7字节数组
@@ -85,15 +90,35 @@ namespace MFramework.Extensions.DataType
         public static byte[] ToHexadecimalBytes(this string self)
         {
             if (!self.IsHexadecimal()) return null;
-            var chars = self.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            var bytes = new byte[chars.Length];
-            //逐个字符变为16进制字节数据
-            for (int i = 0; i < chars.Length; i++)
+            if (self.Length % 2 != 0) return null;
+            return ConvertHexStringToByteArray(self, out var hexadecimalBytes) ? hexadecimalBytes : null;
+        }
+
+        /// <summary>
+        /// 转换为十六进制字节数组，不是十六进制字符串时返回null
+        /// </summary>
+        public static bool TryToHexadecimalBytes(this string self, out byte[] hexadecimalBytes)
+        {
+            hexadecimalBytes = null;
+            if (!self.IsHexadecimal() || self.Length % 2 != 0) return false;
+            return ConvertHexStringToByteArray(self, out hexadecimalBytes);
+        }
+
+        private static bool ConvertHexStringToByteArray(string hexString, out byte[] byteArray)
+        {
+            byteArray = new byte[hexString.Length / 2];
+            for (var i = 0; i < hexString.Length; i += 2)
             {
-                bytes[i] = Convert.ToByte(chars[i], 16);
+                var hexPair = hexString.Substring(i, 2);
+                if (!byte.TryParse(hexPair, NumberStyles.HexNumber, null, out var byteValue))
+                {
+                    return false;
+                }
+
+                byteArray[i / 2] = byteValue;
             }
 
-            return bytes;
+            return true;
         }
 
         /// <summary>
@@ -117,41 +142,121 @@ namespace MFramework.Extensions.DataType
                 if (type != null) return type;
             }
 
-            foreach (var assembly in assemblies)
-            {
-                var types = assembly.GetTypes();
-                foreach (var type in types)
-                {
-                    if (type.Name.Equals(typeName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        return type;
-                    }
-                }
-            }
-
-            return null;
+            return assemblies.SelectMany(assembly => assembly.GetTypes()).FirstOrDefault(type =>
+                type.Name.Equals(typeName, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
         /// 将Windows路径格式中'\'替换为'/'，适用于基于Linux、Unix系统的路径格式
         /// </summary>
-        public static string ToUnixPlatformPath(this string self)
-        {
-            return self.Replace("\\", "/");
-        }
+        public static string ToUnixPlatformPath(this string self) => self.Replace("\\", "/");
+
 
         /// <summary>
         /// 将适用于Linux、Unix的路径格式中'\'替换为'/'，转换为Windows默认路径格式
         /// </summary>
-        public static string ToWindowsPlatformPath(this string self)
-        {
-            return self.Replace("/", "\\");
-        }
+        public static string ToWindowsPlatformPath(this string self) => self.Replace("/", "\\");
 
         #endregion
 
         #region Extraction Operation
 
+        /// <summary>
+        /// 是否包含字母
+        /// </summary>
+        public static bool ContainAlphabet(this string self) => IsMatchContainRegex(self, RegexLibrary.AnyAlphabet);
+
+        /// <summary>
+        /// 提取字母
+        /// </summary>
+        public static string ExtractAlphabet(this string self) => ExtractContentRegex(self, RegexLibrary.AnyAlphabet);
+
+        /// <summary>
+        /// 尝试提取字母
+        /// </summary>
+        public static bool TryExtractAlphabet(this string self, out string result)
+        {
+            return TryExtractContentRegex(self, RegexLibrary.AnyAlphabet, out result);
+        }
+
+        /// <summary>
+        /// 是否包含大写字母
+        /// </summary>
+        public static bool ContainUppercaseAlphabet(this string self)
+        {
+            return IsMatchContainRegex(self, RegexLibrary.EnglishUppercaseAlphabet);
+        }
+
+        /// <summary>
+        /// 提取大写字母
+        /// </summary>
+        public static string ExtractUppercaseAlphabet(this string self)
+        {
+            return ExtractContentRegex(self, RegexLibrary.EnglishUppercaseAlphabet);
+        }
+
+        /// <summary>
+        /// 尝试提取大写字母
+        /// </summary>
+        public static bool TryExtractUppercaseAlphabet(this string self, out string result)
+        {
+            return TryExtractContentRegex(self, RegexLibrary.EnglishUppercaseAlphabet, out result);
+        }
+
+
+        /// <summary>
+        /// 是否包含小写字母
+        /// </summary>
+        public static bool ContainLowercaseAlphabet(this string self)
+        {
+            return IsMatchContainRegex(self, RegexLibrary.EnglishLowercaseAlphabet);
+        }
+
+        /// <summary>
+        /// 提取小写字母
+        /// </summary>
+        public static string ExtractLowercaseAlphabet(this string self)
+        {
+            return ExtractContentRegex(self, RegexLibrary.EnglishLowercaseAlphabet);
+        }
+
+        /// <summary>
+        /// 提取小写字母
+        /// </summary>
+        public static bool TryExtractLowercaseAlphabet(this string self, out string result)
+        {
+            return TryExtractContentRegex(self, RegexLibrary.EnglishLowercaseAlphabet, out result);
+        }
+
+
+        /// <summary>
+        /// 是否包含数字
+        /// </summary>
+        public static bool ContainNumeric(this string self) => IsMatchContainRegex(self, RegexLibrary.AnyNumeric);
+
+        /// <summary>
+        /// 提取数字
+        /// </summary>
+        public static string ExtractNumeric(this string self) => ExtractContentRegex(self, RegexLibrary.AnyNumeric);
+
+        /// <summary>
+        /// 尝试提取数字
+        /// </summary>
+        public static bool TryExtractNumeric(this string self, out string result)
+        {
+            return TryExtractContentRegex(self, RegexLibrary.AnyNumeric, out result);
+        }
+
+        /// <summary>
+        /// 提取字母和数字
+        /// </summary>
+        public static string ExtractAlphabetAndNumeric(this string self)
+        {
+            return ExtractContentRegex(self, RegexLibrary.AnyAlphabetNumeric);
+        }
+
+
+        //未测试API
         /// <summary>
         /// 提取字符
         /// </summary>
@@ -288,50 +393,32 @@ namespace MFramework.Extensions.DataType
             }
         }
 
+
         /// <summary>
         /// 提取Unicode中文字符(仅中文字符，不包含标点符号、空格、序号和偏旁部首)
         /// </summary>
         public static string ExtractChineseCharacter(this string self)
         {
-            return MatchRegex(self, RegexLibrary.ChineseCharacter);
+            return ExtractContentRegex(self, RegexLibrary.ChineseCharacter);
         }
 
+        /// <summary>
+        /// 尝试提取Unicode中文字符(仅中文字符，不包含标点符号、空格、序号和偏旁部首)
+        /// </summary>
+        public static bool TryExtractChineseCharacter(this string self, out string result)
+        {
+            return TryExtractContentRegex(self, RegexLibrary.ChineseCharacter, out result);
+        }
 
         /// <summary>
         /// 提取中文(包含Unicode中文字符、标点符号、数字序号、空格、偏旁部首和部分生僻字)
         /// </summary>
         public static string ExtractChinese(this string self)
         {
-            return MatchRegex(self, RegexLibrary.Chinese);
+            return ExtractContentRegex(self, RegexLibrary.Chinese);
         }
 
-        /// <summary>
-        /// 提取字母
-        /// </summary>
-        public static string ExtractAlphabet(this string self) => MatchRegex(self, RegexLibrary.AnyAlphabet);
-
-        /// <summary>
-        /// 提取大写字母
-        /// </summary>
-        public static string ExtractUppercaseAlphabet(this string self) =>
-            MatchRegex(self, RegexLibrary.EnglishUppercaseAlphabet);
-
-        /// <summary>
-        /// 提取大写字母
-        /// </summary>
-        public static string ExtractLowercaseAlphabet(this string self) =>
-            MatchRegex(self, RegexLibrary.EnglishLowercaseAlphabet);
-
-        /// <summary>
-        /// 提取数字
-        /// </summary>
-        public static string ExtractNumeric(this string self) => MatchRegex(self, RegexLibrary.AnyNumeric);
-
-        /// <summary>
-        /// 提取字母和数字
-        /// </summary>
-        public static string ExtractAlphabetAndNumeric(this string self) =>
-            MatchRegex(self, RegexLibrary.AnyAlphabetNumeric);
+        //TODO 正则表达式整理完成
 
         #endregion
 
@@ -342,7 +429,7 @@ namespace MFramework.Extensions.DataType
         /// </summary>
         public static bool IsHexadecimal(this string self)
         {
-            return Regex.IsMatch(self, RegexLibrary.Hexadecimal);
+            return !string.IsNullOrEmpty(self) && Regex.IsMatch(self, RegexLibrary.Hexadecimal);
         }
 
         /// <summary>
@@ -350,19 +437,18 @@ namespace MFramework.Extensions.DataType
         /// </summary>
         public static bool IsValidWindowsPath(string path)
         {
-            return new Regex(RegexLibrary.WindowsPath).IsMatch(path);
+            return new Regex(RegexLibrary.WindowsPathWithUNC).IsMatch(path);
         }
 
         /// <summary>
         /// 是否为标点符号
         /// </summary>
         public static bool IsPunctuation(this char c) => char.IsPunctuation(c);
-
+        
         /// <summary>
         /// 是否包含中文字符(Unicode)
         /// </summary>
-        public static bool ContainsChineseCharacters(this string self) =>
-            Regex.IsMatch(self, RegexLibrary.ChineseCharacter);
+        public static bool ContainChineseCharacter(this string self) => Regex.IsMatch(self, RegexLibrary.ChineseCharacter);
 
         /// <summary>
         /// 是否是中文字符(Unicode)
@@ -555,35 +641,68 @@ namespace MFramework.Extensions.DataType
 
         #endregion
 
-        private static string CombineRegex(string regex1, string regex2, string regex3 = "", string regex4 = "",
-            string regex5 = "", string regex6 = "", string regex7 = "", string regex8 = "")
-        {
-            return
-                $"[{ExtractRegex(regex1)}{ExtractRegex(regex2)}{ExtractRegex(regex3)}{ExtractRegex(regex4)}{ExtractRegex(regex5)}{ExtractRegex(regex6)}{ExtractRegex(regex7)}{ExtractRegex(regex8)}]";
-        }
-
-        private static string ExtractRegex(string sourceRegex)
-        {
-            if (sourceRegex == "") return string.Empty;
-            if (sourceRegex.StartsWith("[") && sourceRegex.EndsWith("]"))
-            {
-                return sourceRegex.Substring(1, sourceRegex.Length - 2);
-            }
-
-            return string.Empty;
-        }
+        // private static string CombineRegex(string regex1, string regex2, string regex3 = "", string regex4 = "",
+        //     string regex5 = "", string regex6 = "", string regex7 = "", string regex8 = "")
+        // {
+        //     return
+        //         $"[{ExtractRegex(regex1)}{ExtractRegex(regex2)}{ExtractRegex(regex3)}{ExtractRegex(regex4)}{ExtractRegex(regex5)}{ExtractRegex(regex6)}{ExtractRegex(regex7)}{ExtractRegex(regex8)}]";
+        // }
+        //
+        // private static string ExtractRegex(string sourceRegex)
+        // {
+        //     if (sourceRegex == "") return string.Empty;
+        //     if (sourceRegex.StartsWith("[") && sourceRegex.EndsWith("]"))
+        //     {
+        //         return sourceRegex.Substring(1, sourceRegex.Length - 2);
+        //     }
+        //
+        //     return string.Empty;
+        // }
 
         private static string MatchRegex(string sourceString, string pattern)
         {
-            Debug.Log(pattern);
             var catchCharacters = new StringBuilder();
-            Debug.Log(new Regex(pattern).Matches(sourceString).Count);
             foreach (Match match in new Regex(pattern).Matches(sourceString))
             {
                 catchCharacters.Append(match.Value);
             }
 
             return catchCharacters.ToString();
+        }
+
+        private static string ExtractContentRegex(string sourceString, string pattern)
+        {
+            var resultBuilder = new StringBuilder();
+            foreach (Match match in new Regex(pattern).Matches(sourceString))
+            {
+                resultBuilder.Append(match.Value);
+            }
+
+            return resultBuilder.ToString();
+        }
+
+        private static bool TryExtractContentRegex(string sourceString, string pattern, out string result)
+        {
+            result = string.Empty;
+            if (!IsMatchContainRegex(sourceString, pattern)) return false;
+            var resultBuilder = new StringBuilder();
+            foreach (Match match in new Regex(pattern).Matches(sourceString))
+            {
+                resultBuilder.Append(match.Value);
+            }
+
+            result = resultBuilder.ToString();
+            return true;
+        }
+
+        private static string ExtractContentsRegex(string sourceString, string pattern)
+        {
+            return string.Empty;
+        }
+
+        private static bool IsMatchContainRegex(string sourceString, string pattern)
+        {
+            return new Regex(pattern).IsMatch(sourceString);
         }
     }
 }

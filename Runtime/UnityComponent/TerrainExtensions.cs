@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace MFramework.Extensions.UnityComponent
 {
-    public static class TerrainExpansions
+    public static class TerrainExtensions
     {
         /// <summary>
         /// 返回Terrain上某一点的HeightMap索引。

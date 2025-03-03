@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -6,7 +5,7 @@ using Object = UnityEngine.Object;
 
 namespace MFramework.Extensions.UnityComponent
 {
-    public static class UIBehaviourExpansions
+    public static class UIBehaviourExtensions
     {
         // public static void AddPointerEvent(this UIBehaviour self, PointerEventType eventType, Action action) {
         //     self.transform.GetOrAddComponent<PointerEventController>().AddPointerEvent(eventType, action);
@@ -85,7 +84,7 @@ namespace MFramework.Extensions.UnityComponent
             return default(T);
         }
 
-        public static GameObject CreateChildTextPlus(Transform parent, string textContent = "Text Content") {
+        public static GameObject CreateChildText(Transform parent, string textContent = "Text Content") {
             GameObject childTextGameObject = new GameObject() { name = "Text", layer = 5 };
             RectTransform childRectTransform = childTextGameObject.AddComponent<RectTransform>();
             childRectTransform.SetAnchor(AnchorPresets.StretchAll);
