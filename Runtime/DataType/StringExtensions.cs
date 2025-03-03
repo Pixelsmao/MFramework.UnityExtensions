@@ -247,6 +247,30 @@ namespace MFramework.Extensions.DataType
             return TryExtractContentRegex(self, RegexLibrary.AnyNumeric, out result);
         }
 
+        public static string ExtractFloatNumeric(this string self)
+        {
+            return MatchingFirst(self, RegexLibrary.FloatType);
+        }
+
+        public static string[] ExtractFloatNumerics(this string self)
+        {
+            return MatchingAll(self, RegexLibrary.FloatType);
+        }
+
+        public static string ExtractInt(this string self)
+        {
+            return MatchingFirst(self, RegexLibrary.IntType);
+        }
+
+        public static string ExtractIntFloat(this string self)
+        {
+            return MatchingFirst(self, RegexLibrary.IntFloat);
+        }
+        public static string[] ExtractIntFloats(this string self)
+        {
+            return MatchingAll(self, RegexLibrary.IntFloat);
+        }
+
         /// <summary>
         /// 提取字母和数字
         /// </summary>
@@ -444,11 +468,12 @@ namespace MFramework.Extensions.DataType
         /// 是否为标点符号
         /// </summary>
         public static bool IsPunctuation(this char c) => char.IsPunctuation(c);
-        
+
         /// <summary>
         /// 是否包含中文字符(Unicode)
         /// </summary>
-        public static bool ContainChineseCharacter(this string self) => Regex.IsMatch(self, RegexLibrary.ChineseCharacter);
+        public static bool ContainChineseCharacter(this string self) =>
+            Regex.IsMatch(self, RegexLibrary.ChineseCharacter);
 
         /// <summary>
         /// 是否是中文字符(Unicode)
@@ -670,6 +695,55 @@ namespace MFramework.Extensions.DataType
             return catchCharacters.ToString();
         }
 
+        /// <summary>
+        /// 提取字符串中符合正则表达式的第一个结果
+        /// </summary>
+        private static string MatchingFirst(this string self, string pattern)
+        {
+            return new Regex(pattern).Match(self).Value;
+        }
+
+        /// <summary>
+        /// 提取字符串中符合正则表达式的最后一个结果
+        /// </summary>
+        private static string MatchingLast(this string self, string pattern)
+        {
+            return new Regex(pattern).Match(self).Value;
+        }
+
+        /// <summary>
+        /// 提取字符串中符合正则表达式的所有结果
+        /// </summary>
+        private static string[] MatchingAll(this string self, string pattern)
+        {
+            var matches = new Regex(pattern).Matches(self);
+            var result = new string[matches.Count];
+            for (var i = 0; i < matches.Count; i++)
+            {
+                result[i] = matches[i].Value;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 提取字符串中符合正则表达式的所有结果并合并成一个
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="pattern"></param>
+        /// <returns></returns>
+        private static string ExtractAllInOne(this string self, string pattern)
+        {
+            var resultBuilder = new StringBuilder();
+            foreach (Match match in new Regex(pattern).Matches(self))
+            {
+                resultBuilder.Append(match.Value);
+            }
+
+            return resultBuilder.ToString();
+        }
+
+
         private static string ExtractContentRegex(string sourceString, string pattern)
         {
             var resultBuilder = new StringBuilder();
@@ -695,9 +769,9 @@ namespace MFramework.Extensions.DataType
             return true;
         }
 
-        private static string ExtractContentsRegex(string sourceString, string pattern)
+        private static string[] ExtractContentsRegex(string sourceString, string pattern)
         {
-            return string.Empty;
+            return null;
         }
 
         private static bool IsMatchContainRegex(string sourceString, string pattern)

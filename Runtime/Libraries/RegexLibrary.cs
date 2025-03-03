@@ -5,6 +5,27 @@ namespace MFramework.Libraries
 {
     public static class RegexLibrary
     {
+        #region Numeric
+
+        public const string IntFloat = @"(?<!\d)-?\d*\.?\d+(?:[eE][-+]?\d+)?";
+
+        #region Int Type
+
+        public const string IntType = @"(?<!\d)\d+(?!\d)";
+
+        #endregion
+
+        #region Float Type
+
+        public const string FloatType = @"(?<!\d)\d+\.\d+(?!\d)";
+
+        #endregion
+
+        #endregion
+
+        #region Alphabet
+
+        #endregion
 
         public const string AlphabetNumeric = "[a-zA-Z0-9]+";
 
@@ -87,7 +108,7 @@ namespace MFramework.Libraries
         /// 匹配由一个或多个字母和数字组成的字符串。
         /// </summary>
         public const string AnyAlphabetAndNumeric = @"^[A-Za-z0-9]+$";
-        
+
         /// <summary>
         /// 匹配由一个或多个字母、数字和下划线组成的字符串。
         /// </summary>
