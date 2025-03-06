@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MFramework.Extensions
+namespace MFramework.Extensions.UnityComponent
 {
     public static class Texture2DExtensions
     {

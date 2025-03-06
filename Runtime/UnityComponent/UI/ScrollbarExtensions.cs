@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace MFramework.Extensions
+namespace MFramework.Extensions.UnityComponent
 {
     public static class ScrollbarExtensions
     {

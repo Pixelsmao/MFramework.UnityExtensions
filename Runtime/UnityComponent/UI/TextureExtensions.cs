@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace MFramework.Extensions
+namespace MFramework.Extensions.UnityComponent
 {
     public static class TextureExtensions
     {

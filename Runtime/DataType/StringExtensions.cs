@@ -24,6 +24,16 @@ namespace MFramework.Extensions.DataType
         public static bool TryToInt(this string self, out int int32) => int.TryParse(self, out int32);
 
         /// <summary>
+        /// 字符型转换为浮点类型
+        /// </summary>
+        public static float ToFloat(this string self) => float.Parse(self);
+
+        /// <summary>
+        /// 尝试字符型转换为浮点类型：指定字符无法转换为整型时返回值为-1
+        /// </summary>
+        public static bool TryToFloat(this string self, out float floatResult) => float.TryParse(self, out floatResult);
+
+        /// <summary>
         /// 将字符转换为UTF7字节数组
         /// </summary>
         public static byte[] ToUTF7Bytes(this string self) => Encoding.UTF7.GetBytes(self);
@@ -266,6 +276,7 @@ namespace MFramework.Extensions.DataType
         {
             return MatchingFirst(self, RegexLibrary.IntFloat);
         }
+
         public static string[] ExtractIntFloats(this string self)
         {
             return MatchingAll(self, RegexLibrary.IntFloat);

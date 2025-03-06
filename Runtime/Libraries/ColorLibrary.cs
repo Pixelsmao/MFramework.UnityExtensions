@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MFramework.UtilityLibrary
+namespace MFramework.Libraries
 {
     ///https://www.codeeeee.com/color/rgb.html
     public static class ColorLibrary

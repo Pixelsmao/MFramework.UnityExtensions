@@ -3,7 +3,7 @@ using UnityEngine;
 
 // ReSharper disable InvalidXmlDocComment
 
-namespace MFramework.Extensions
+namespace MFramework.Extensions.DataType
 {
     public static class FloatExtension
     {
