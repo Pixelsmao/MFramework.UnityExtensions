@@ -104,11 +104,15 @@ namespace MFramework.Extensions.DataType
         public static string ToHexString(this int value) => value.ToString("X");
 
         /// <summary>
-        /// 转换为时钟时间
+        /// 格式化为HH:mm:ss格式的时间字符串
         /// </summary>
-        public static ClockTime ToClockTime(this int value)
+        public static string ToHMSTime(this int totalSeconds)
         {
-            return new ClockTime(value);
+            var hours = totalSeconds / 3600;
+            var remaining = totalSeconds % 3600;
+            var minutes = remaining / 60;
+            var seconds = remaining % 60;
+            return $"{hours:D2}:{minutes:D2}:{seconds:D2}";
         }
     }
 }

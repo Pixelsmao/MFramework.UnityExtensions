@@ -94,6 +94,20 @@ namespace MFramework.Extensions.DataType
         /// </summary>
         public static string ToGBK(this string self) => BitConverter.ToString(ToGBKBytes(self));
 
+        public static string ToHMSTime(this string totalSeconds)
+        {
+            if (int.TryParse(totalSeconds, out var totalSecondsInt))
+            {
+                return totalSecondsInt.ToHMSTime();
+            }
+
+            if (float.TryParse(totalSeconds, out var totalSecondsFloat))
+            {
+            }
+
+            return string.Empty;
+        }
+
         /// <summary>
         /// 转换为十六进制字节数组，不是十六进制字符串时返回null
         /// </summary>
@@ -134,9 +148,9 @@ namespace MFramework.Extensions.DataType
         /// <summary>
         /// 转换为时钟时间
         /// </summary>
-        public static ClockTime ToClockTime(this string value)
+        public static TimeClock ToTimeClock(this string value)
         {
-            return new ClockTime(value);
+            return new TimeClock(value);
         }
 
         /// <summary>
