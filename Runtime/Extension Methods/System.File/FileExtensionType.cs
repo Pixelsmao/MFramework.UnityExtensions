@@ -1,0 +1,35 @@
+namespace MFramework.Extensions.WindowsSystem
+{
+    public enum FileExtensionType
+    {
+        All,
+        Jpeg,
+        Jpg,
+        Png,
+        Bmp,
+        Tiff,
+        Gif,
+        Svg,
+        Raw,
+        Webp,
+        Mkv,
+        Wmv,
+        Avi,
+        Mpeg,
+        Mpg,
+        Rmvb,
+        Flv,
+        Mp4,
+        Mov,
+        Txt,
+        Xml,
+        Json,
+        Xlsx,
+        Xls,
+        Doc,
+        Docx,
+        Csv,
+        Ini,
+        Config
+    }
+}
