@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Linq;
 using MFramework.Extensions.WindowsSystem;
 
-namespace MFramework.Utility
+namespace MFramework.Extensions
 {
     /// <summary>
     /// Windows进程类(Process)实用工具

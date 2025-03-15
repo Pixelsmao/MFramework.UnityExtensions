@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using MFramework.Utility;
 // ReSharper disable UnusedMember.Local
 // ReSharper disable IdentifierTypo
 namespace MFramework.Extensions.WindowsSystem
