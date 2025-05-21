@@ -12,6 +12,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Pixelsmao/MFramework.UnityExtension.git"
-  },
-  "dependencies": {}
+  }
 }
