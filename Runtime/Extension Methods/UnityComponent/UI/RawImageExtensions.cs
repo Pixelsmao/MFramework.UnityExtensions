@@ -14,7 +14,13 @@ namespace MFramework.Extensions.UnityComponent
             if (rawImage == null || rawImage.rectTransform == null)
                 throw new ArgumentNullException(nameof(rawImage), "RawImage or its RectTransform cannot be null.");
 
-            if (rawImage.texture == null) return;
+            if (rawImage.texture == null)
+            {
+                rawImage.rectTransform.sizeDelta = maxSize;
+                Debug.LogWarning($"{nameof(rawImage)} 的Texture为空，自适应尺寸设置为最大尺寸：{maxSize}");
+                return;
+            }
+
             var texture = rawImage.texture;
             var aspectRatio = texture.GetAspectRatio();
 

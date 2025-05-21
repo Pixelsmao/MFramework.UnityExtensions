@@ -1,17 +1,17 @@
 {
-  "name": "com.thazy.mframework.unityextensions",
+  "name": "com.pixelsmao.mframework.unityextensions",
   "version": "0.1.0",
   "displayName": "MFramework.UnityExtensions",
   "description": "用于Unity内的拓展方法库",
   "unity": "2023.3",
   "author": {
-    "name": "当然是小喵咪呀",
+    "name": "Pixelsmao",
     "email": "1351820946@qq.com"
   },
   "documentation": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/T-Hazy/MFramework.UnityExtension.git"
+    "url": "https://github.com/Pixelsmao/MFramework.UnityExtension.git"
   },
   "dependencies": {}
 }
